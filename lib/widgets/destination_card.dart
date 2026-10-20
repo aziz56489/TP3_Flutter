@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../models/destination.dart';
+import 'favourite_button.dart';
 
 class DestinationCard extends StatelessWidget {
   final Destination destination;
+  final bool isFavourite;
+  final VoidCallback onFavouritePressed;
 
-  const DestinationCard({super.key, required this.destination});
+  const DestinationCard({
+    super.key,
+    required this.destination,
+    required this.isFavourite,
+    required this.onFavouritePressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +45,23 @@ class DestinationCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    destination.nom,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          destination.nom,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      FavouriteButton(
+                        isFavourite: isFavourite,
+                        onPressed: onFavouritePressed,
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8),
                   Row(

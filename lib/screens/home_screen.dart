@@ -17,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String _categorie = 'Tout';
+  final Set<String> _favoris = <String>{};
 
   List<Destination> get _filtrees {
     if (_categorie == 'Tout') {
@@ -65,8 +66,22 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 24),
             const SectionTitle(title: 'Populaires', action: 'Voir tout'),
             const SizedBox(height: 12),
-            for (final destination in _filtrees)
-              DestinationCard(destination: destination),
+            // La clé conserve chaque carte avec sa destination pendant le filtrage.
+            // Sans clé, Flutter peut réutiliser l'état par position : le favori
+            // de Tozeur/Djerba risque alors d'apparaître sur une autre carte.
+            for (final d in _filtrees)
+              DestinationCard(
+                key: ValueKey(d.nom),
+                destination: d,
+                isFavourite: _favoris.contains(d.nom),
+                onFavouritePressed: () {
+                  setState(() {
+                    if (!_favoris.add(d.nom)) {
+                      _favoris.remove(d.nom);
+                    }
+                  });
+                },
+              ),
           ],
         ),
       ),
