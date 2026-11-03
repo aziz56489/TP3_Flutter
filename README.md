@@ -55,3 +55,11 @@ Le `validator` vérifie la validité du contenu au moment de la validation du fo
 
 ### Q3. Pourquoi faut-il appeler `dispose()` sur les contrôleurs ?
 Parce que les `TextEditingController` gardent en mémoire l'état du champ de texte (contenu actuel, curseur, etc.). Si on ne les libère pas quand l'écran est détruit, on laisse des ressources inutilisées et on peut provoquer des fuites mémoire. `dispose()` permet de nettoyer correctement les contrôleurs et d'éviter de conserver de l'état d'un widget qui n'existe plus. C'est la bonne pratique dans Flutter pour libérer les ressources et éviter les bugs de mémoire.
+
+## Questions de compréhension sur la réservation
+
+### Q1. Pourquoi le champ date est-il en `readOnly` ? Que se passerait-il sinon ?
+Il est en `readOnly` pour choisir la date avec le calendrier, pas avec le clavier. Sinon, on pourrait taper une date au mauvais format.
+
+### Q2. `_total` est un getter. Pourquoi n'a-t-on pas besoin de le mettre à jour nous-mêmes quand la formule change ?
+Le getter recalcule le total à partir de la formule et du nombre de voyageurs. Quand la formule change, `setState` reconstruit l'écran et le getter donne le nouveau total.
