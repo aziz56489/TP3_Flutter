@@ -63,3 +63,14 @@ Il est en `readOnly` pour choisir la date avec le calendrier, pas avec le clavie
 
 ### Q2. `_total` est un getter. Pourquoi n'a-t-on pas besoin de le mettre à jour nous-mêmes quand la formule change ?
 Le getter recalcule le total à partir de la formule et du nombre de voyageurs. Quand la formule change, `setState` reconstruit l'écran et le getter donne le nouveau total.
+
+## Questions sur la réservation et la boîte de dialogue
+
+### Q1. Que vaut `reservation` si l'utilisateur quitte le formulaire avec la flèche retour ?
+Elle vaut `null`, car aucune réservation n'a été renvoyée avec `Navigator.pop`.
+
+### Q2. Que signifie l'avertissement si on retire le test `mounted` ?
+VS Code signale qu'on utilise `BuildContext` après un `await` sans vérifier que le widget existe encore. `mounted` évite d'utiliser un contexte dont l'écran a été fermé.
+
+### Q3. Que nous apprend le bouton « Parfait » sur les boîtes de dialogue ?
+Une boîte de dialogue est aussi une route dans la pile de navigation. `Navigator.pop` la ferme et revient à l'écran qui l'a ouverte.

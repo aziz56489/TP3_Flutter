@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tp3/models/reservation.dart';
 
 import '../models/destination.dart';
 import '../widgets/favourite_button.dart';
@@ -17,7 +18,6 @@ class DetailScreen extends StatefulWidget {
     required this.isFavourite,
     required this.onFavouritePressed,
   });
-
   @override
   State<DetailScreen> createState() => _DetailScreenState();
 }
@@ -25,7 +25,33 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   int _voyageurs = 1;
   late bool _isFavourite;
-
+  Future<void> _reserver() async{
+    final Reservation? reservation = await Navigator.push<Reservation>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ReservationScreen(
+          destination: widget.destination,
+          voyageurs: _voyageurs,
+        ),
+      ),
+    );
+    if(reservation == null) return;
+    if(!mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder : (context) => AlertDialog(
+        icon : const Icon (Icons.check_circle , color: Colors.green , size : 48),
+        title : const Text('Reservation confirmee'),
+        content : Text('Merci ${reservation.nom} pour votre reservation de ${_voyageurs} voyageur(s) pour ${reservation.destination.nom} et ${reservation.email} et ${reservation.formule}: Le total est de ${reservation.total} DT.'),
+        actions:[
+          FilledButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Parfait'),
+          ),
+        ],
+    )
+    );
+  }
   @override
   void initState() {
     super.initState();
@@ -235,15 +261,7 @@ class _DetailScreenState extends State<DetailScreen> {
               const SizedBox(width: 20),
               Expanded(
                 child: FilledButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ReservationScreen(destination: d, voyageurs: _voyageurs),
-                      ),
-                    );
-                  },
+                  onPressed: _reserver,
                   style: FilledButton.styleFrom(
                     minimumSize: const Size.fromHeight(56),
                   ),

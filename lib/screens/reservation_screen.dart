@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tp3/models/reservation.dart';
 
 import '../models/destination.dart';
 class ReservationScreen extends StatefulWidget{
@@ -14,6 +15,7 @@ class ReservationScreen extends StatefulWidget{
   State<ReservationScreen> createState() => _ReservationScreenState();
 }
 class _ReservationScreenState extends State<ReservationScreen>{
+  AutovalidateMode _autoValidation = AutovalidateMode.disabled;
   final _formKey = GlobalKey<FormState>();
   final _nomCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
@@ -78,10 +80,20 @@ class _ReservationScreenState extends State<ReservationScreen>{
     return null;
   }
   void _valider(){
-    if(!_formKey.currentState!.validate())return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Formulaire valide")),
+    if(!_formKey.currentState!.validate()){
+      setState(()=>_autoValidation = AutovalidateMode.onUserInteraction);
+      return;
+    }
+    final reservation = Reservation(
+      destination: widget.destination,
+      nom: _nomCtrl.text.trim(),
+      email: _emailCtrl.text.trim(),
+      telephone: _telCtrl.text.trim(),
+      dateDepart: _date!,
+      voyageurs: widget.voyageurs,
+      formule: _formule,
     );
+    Navigator.pop(context, reservation);
   }
   @override
   Widget build(BuildContext context){
