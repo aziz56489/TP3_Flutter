@@ -1,30 +1,25 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:tp3/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('the home screen loads destinations and categories', (
+    tester,
+  ) async {
     await tester.pumpWidget(const RihlaApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Ahlan, Aziz 👋'), findsOneWidget);
+    expect(find.text('Catégories'), findsOneWidget);
+    expect(find.text('Sidi Bou Saïd'), findsOneWidget);
+    expect(find.text('Djerba'), findsOneWidget);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  testWidgets('the favorites tab filters the list', (tester) async {
+    await tester.pumpWidget(const RihlaApp());
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await tester.tap(find.text('Favoris'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Mes favoris'), findsOneWidget);
   });
 }

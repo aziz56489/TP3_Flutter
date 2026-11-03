@@ -17,16 +17,30 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String _categorie = 'Tout';
+  String _recherche = '';
   int _onglet = 0;
   final Set<String> _favoris = <String>{};
 
   List<Destination> get _filtrees {
-    if (_categorie == 'Tout') {
-      return destinations.take(6).toList();
-    }
+    final source = _onglet == 1
+        ? destinations.where(
+            (destination) => _favoris.contains(destination.nom),
+          )
+        : destinations;
+    final query = _recherche.trim().toLowerCase();
 
-    return destinations
-        .where((destination) => destination.categorie == _categorie)
+    return source
+        .where(
+          (destination) =>
+              _categorie == 'Tout' || destination.categorie == _categorie,
+        )
+        .where(
+          (destination) =>
+              query.isEmpty ||
+              destination.nom.toLowerCase().contains(query) ||
+              destination.region.toLowerCase().contains(query) ||
+              destination.categorie.toLowerCase().contains(query),
+        )
         .toList();
   }
 
@@ -37,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           const HomeHeader(prenom: 'Aziz'),
           const SizedBox(height: 20),
-          const SearchBox(),
+          SearchBox(onChanged: (value) => setState(() => _recherche = value)),
           const SizedBox(height: 24),
           HeroBanner(destination: destinations.first),
           const SizedBox(height: 24),
@@ -62,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const SizedBox(height: 24),
-          const SectionTitle(title: 'Populaires', action: 'Voir tout'),
+          SectionTitle(title: _onglet == 1 ? 'Mes favoris' : 'Populaires'),
           const SizedBox(height: 12),
           // Une clé stable garde l'état visuel associé à la bonne destination lors du filtrage.
           for (final d in _filtrees)
@@ -84,9 +98,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _onglet == 0
-          ? _construireAccueil()
-          : const Center(child: Text('Bientôt disponible')),
+      body: _onglet == 2
+          ? const Center(child: Text('Bientôt disponible'))
+          : _construireAccueil(),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _onglet,
         onDestinationSelected: (index) {
