@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/destination.dart';
 import '../widgets/favourite_button.dart';
+import 'reservation_screen.dart';
 
 /// Devoir TP3 — Écran de détail d'une destination (version du kit TP4).
 /// À relier aux cartes au palier 2 du TP4.
@@ -234,7 +235,15 @@ class _DetailScreenState extends State<DetailScreen> {
               const SizedBox(width: 20),
               Expanded(
                 child: FilledButton(
-                  onPressed: () {}, // TP4 palier 3 puis 5
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ReservationScreen(destination: d, voyageurs: _voyageurs),
+                      ),
+                    );
+                  },
                   style: FilledButton.styleFrom(
                     minimumSize: const Size.fromHeight(56),
                   ),

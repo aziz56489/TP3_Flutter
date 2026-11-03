@@ -35,10 +35,23 @@ samples, guidance on mobile development, and a full API reference.
 
 
 ### Q1. 
-Oui, le filtre est conservé. Lorsque l'on ouvre une destination via `Navigator.push`, Flutter empile une nouvelle route au-dessus de l'écran d'accueil. La page d'accueil reste dans la pile en dessous. Quand on revient avec `Navigator.pop`, Flutter retire la route du dessus . La route précédente, qui contient le filtre, reste vivante avec son état local, donc le filtre « Désert » est toujours appliqué.une route est poussée au-dessus, puis retirée lors du retour.
+Oui, le filtre est conservé. Lorsque l'on ouvre une destination via `Navigator.push`, Flutter empile une nouvelle route au-dessus de l'écran d'accueil. La page d'accueil reste dans la pile en dessous. Quand on revient avec `Navigator.pop`, Flutter retire la route du dessus (principe LIFO : Last In, First Out). La route précédente, qui contient le filtre, reste vivante avec son état local, donc le filtre « Désert » est toujours appliqué. Ici, la notion de pile correspond à la pile de routes navigables : la route active est au-dessus, puis on la retire pour retrouver la précédente.
 
 ### Q2.
-`DetailScreen` reçoit la destination via son constructeur la destination est donc transmise depuis l'écran source vers l'écran destination, exactement comme dans le TP 3 où l'on passait des données entre écrans en utilisant le constructeur ou les paramètres de route. On réutilise le mécanisme de navigation avec données : un objet de modèle (`Destination`) est envoyé à la nouvelle page avant son affichage.
+`DetailScreen` reçoit la destination via son constructeur. La destination est donc transmise depuis l'écran source vers l'écran destination, exactement comme dans le TP 3 où l'on passait des données entre écrans en utilisant le constructeur ou les paramètres de route. On réutilise le mécanisme de navigation avec données : un objet de modèle (`Destination`) est envoyé à la nouvelle page avant son affichage.
 
 ### Q3. 
- `clipBehavior` sert à garder le splash dans le conteneur arrondi et propre.
+Quand on retire `clipBehavior`, l'effet visuel de pression (`InkWell` / ripple) n'est plus coupé par les bords arrondis de la carte. On remarque alors que le splash semble sortir au-delà du contour arrondi et que le rendu devient moins propre. `clipBehavior` sert donc à contenir l'effet au sein du widget et à préserver la forme arrondie.
+
+## Questions de compréhension sur le formulaire de réservation
+
+### Q1. Que fait exactement `_formKey.currentState!.validate()` ? Que renvoie-t-elle ?
+`_formKey.currentState` donne l'état du formulaire associé à la clé. Ensuite, `validate()` appelle la méthode `validate()` de chaque `FormField` du formulaire (ici les `TextFormField`). Chaque champ exécute alors son `validator`. Si tous les champs sont valides, `validate()` renvoie `true`. Si au moins un champ est invalide, il renvoie `false` et affiche les messages d'erreur correspondants. Donc cette instruction sert à valider le formulaire entier et à renvoyer un booléen.
+
+### Q2. `inputFormatters` et `validator` contrôlent tous deux le téléphone. Quelle est la différence de rôle ?
+Le `validator` vérifie la validité du contenu au moment de la validation du formulaire : il contrôle le format logique (par exemple 8 chiffres, champ obligatoire, etc.). En revanche, `inputFormatters` agit au niveau de l'entrée utilisateur, avant validation : il limite ou transforme ce que l'utilisateur peut taper, par exemple en autorisant uniquement des chiffres, en supprimant les espaces ou en imposant une longueur maximale. En résumé :
+- `validator` = vérifie le sens / la validité du champ
+- `inputFormatters` = limite la saisie au clavier et au texte saisi
+
+### Q3. Pourquoi faut-il appeler `dispose()` sur les contrôleurs ?
+Parce que les `TextEditingController` gardent en mémoire l'état du champ de texte (contenu actuel, curseur, etc.). Si on ne les libère pas quand l'écran est détruit, on laisse des ressources inutilisées et on peut provoquer des fuites mémoire. `dispose()` permet de nettoyer correctement les contrôleurs et d'éviter de conserver de l'état d'un widget qui n'existe plus. C'est la bonne pratique dans Flutter pour libérer les ressources et éviter les bugs de mémoire.
