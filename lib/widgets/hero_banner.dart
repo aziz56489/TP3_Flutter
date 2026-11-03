@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:tp3/screens/detail_screen.dart';
 
 import '../models/destination.dart';
 
 class HeroBanner extends StatelessWidget {
   final Destination destination;
+  final bool isFavourite;
+  final VoidCallback onFavouritePressed;
 
-  const HeroBanner({super.key, required this.destination});
+  const HeroBanner({
+    super.key,
+    required this.destination,
+    required this.isFavourite,
+    required this.onFavouritePressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),
+      
       child: SizedBox(
         height: 200,
         child: Stack(
@@ -113,7 +122,18 @@ class HeroBanner extends StatelessWidget {
               right: 16,
               bottom: 20,
               child: FilledButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailScreen(
+                        destination: destination,
+                        isFavourite: isFavourite,
+                        onFavouritePressed: onFavouritePressed,
+                      ),
+                    ),
+                  );
+                },
                 child: const Text('Découvrir'),
               ),
             ),

@@ -53,7 +53,17 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 20),
           SearchBox(onChanged: (value) => setState(() => _recherche = value)),
           const SizedBox(height: 24),
-          HeroBanner(destination: destinations.first),
+          HeroBanner(
+            destination: destinations.first,
+            isFavourite: _favoris.contains(destinations.first.nom),
+            onFavouritePressed: () {
+              setState(() {
+                if (!_favoris.add(destinations.first.nom)) {
+                  _favoris.remove(destinations.first.nom);
+                }
+              });
+            },
+          ),
           const SizedBox(height: 24),
           const SectionTitle(title: 'Catégories'),
           const SizedBox(height: 12),

@@ -32,3 +32,13 @@ samples, guidance on mobile development, and a full API reference.
 **Q7.** La `Column` doit être dans un `Expanded` pour prendre l'espace disponible. Comme ça, le `Spacer` peut utiliser l'espace restant dans la `Row` pour séparer la note et le prix.
 
 **Q8.** Il faut ajouter une destination dans la liste des destinations, dans le fichier où cette liste est déclarée, probablement `home_screen.dart` ou le fichier qui contient les données des destinations.
+
+
+### Q1. 
+Oui, le filtre est conservé. Lorsque l'on ouvre une destination via `Navigator.push`, Flutter empile une nouvelle route au-dessus de l'écran d'accueil. La page d'accueil reste dans la pile en dessous. Quand on revient avec `Navigator.pop`, Flutter retire la route du dessus . La route précédente, qui contient le filtre, reste vivante avec son état local, donc le filtre « Désert » est toujours appliqué.une route est poussée au-dessus, puis retirée lors du retour.
+
+### Q2.
+`DetailScreen` reçoit la destination via son constructeur la destination est donc transmise depuis l'écran source vers l'écran destination, exactement comme dans le TP 3 où l'on passait des données entre écrans en utilisant le constructeur ou les paramètres de route. On réutilise le mécanisme de navigation avec données : un objet de modèle (`Destination`) est envoyé à la nouvelle page avant son affichage.
+
+### Q3. 
+ `clipBehavior` sert à garder le splash dans le conteneur arrondi et propre.
