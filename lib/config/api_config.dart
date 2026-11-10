@@ -1,0 +1,5 @@
+static String get baseUrl{
+  if(kIsWeb) return 'http://localhost:$port';
+  if(defaultTargetPlatform == TargetPlatform.android) return 'http://10.0.2.2:$port';
+  return 'http://localhost:$port';
+}
