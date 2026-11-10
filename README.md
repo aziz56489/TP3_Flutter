@@ -78,3 +78,9 @@ Une boîte de dialogue est aussi une route dans la pile de navigation. `Navigato
 ### Palier0/Q1 . erreur 404 sous format json , ERREUR DE CLIENT
 ### Q2. le serveur
 ### Q3 . La requete sert a recuperer des donnees ces informations sont generalement transmis dans l Url , tandis que la requete POST sert a envoyer des informations
+### Q1. On utilise un constructeur factory car il permet de creer et de retourner une instance de la classe a partir d une structure json
+### Q2 . l appel a toDouble() provoquera une erreur de type
+### Q3 .On utilise Future parce que la lecture du fichier JSON est une opération asynchrone.
+### Q1 . on utilise late car la variable est declaree sans etre initialisee immediatement
+### Q2. l utilisateur verrait une erreur au lieu d un message d erreur personnalise
+### Q3. non , car les donnees sont deja chargees et stockees dans snapshot.data
