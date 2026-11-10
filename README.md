@@ -74,3 +74,7 @@ VS Code signale qu'on utilise `BuildContext` après un `await` sans vérifier qu
 
 ### Q3. Que nous apprend le bouton « Parfait » sur les boîtes de dialogue ?
 Une boîte de dialogue est aussi une route dans la pile de navigation. `Navigator.pop` la ferme et revient à l'écran qui l'a ouverte.
+
+### Palier0/Q1 . erreur 404 sous format json , ERREUR DE CLIENT
+### Q2. le serveur
+### Q3 . La requete sert a recuperer des donnees ces informations sont generalement transmis dans l Url , tandis que la requete POST sert a envoyer des informations
