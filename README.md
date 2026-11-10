@@ -84,3 +84,6 @@ Une boîte de dialogue est aussi une route dans la pile de navigation. `Navigato
 ### Q1 . on utilise late car la variable est declaree sans etre initialisee immediatement
 ### Q2. l utilisateur verrait une erreur au lieu d un message d erreur personnalise
 ### Q3. non , car les donnees sont deja chargees et stockees dans snapshot.data
+### Q1 . pour eviter la duplication des donnees et reduire la taille de la requete
+### Q2 .le serveur risque de n est pas connaitre le format json du corps de la requete
+### Q3. car pendant une operation asynchrone l utilisateur peut quitter la page 

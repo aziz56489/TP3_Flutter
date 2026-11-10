@@ -1,6 +1,7 @@
-import 'destination.dart';
+﻿import 'destination.dart';
 
 class Reservation {
+  final String? id;
   final Destination destination;
   final String nom;
   final String email;
@@ -10,6 +11,7 @@ class Reservation {
   final String formule;
 
   const Reservation({
+    required this.id,
     required this.destination,
     required this.nom,
     required this.email,
@@ -18,6 +20,18 @@ class Reservation {
     required this.voyageurs,
     required this.formule,
   });
+  Map<String,dynamic> toJson(){
+    return{
+      'destinationId' : destination.id,
+      'nom' : nom,
+      'email' : email,
+      'telephone' : telephone,
+      'voyageurs' : voyageurs,
+      'formule' : formule,
+      'total' : total,
+      'dateDepart' : dateDepart.toIso8601String()
+    };
+  }
   int get prixParPersonne {
     final normalized = formule.trim().toLowerCase();
 

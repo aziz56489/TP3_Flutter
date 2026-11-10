@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../models/reservation.dart';
 import '../config/api_config.dart';
 import '../models/destination.dart';
 class ApiService{
@@ -14,5 +15,18 @@ class ApiService{
     final List<dynamic> liste = jsonDecode(utf8.decode(reponse.bodyBytes));
 
     return liste.map((json) => Destination.fromJson(json)).toList();
+  }
+  static Future<String> creerReservation(Reservation reservation) async{
+    final reponse = await http
+            .post(
+              _url('/reservations'),
+              headers: {'Content-Type' : 'application/json'},
+              body : jsonEncode(reservation.toJson())
+            );
+    if(reponse.statusCode != 201){
+      throw Exception("Erreur de l envoi de la requete");
+    }
+    final Map<String,dynamic> creee = jsonDecode(utf8.decode(reponse.bodyBytes));
+    return creee['id'].toString();
   }
 }

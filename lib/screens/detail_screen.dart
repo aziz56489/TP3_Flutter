@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tp3/models/reservation.dart';
+import 'package:tp3/services/api_service.dart';
 
 import '../models/destination.dart';
+import '../services/api_service.dart';
 import '../widgets/favourite_button.dart';
 import 'reservation_screen.dart';
 
@@ -37,12 +39,24 @@ class _DetailScreenState extends State<DetailScreen> {
     );
     if(reservation == null) return;
     if(!mounted) return;
+    final String id;
+    try{
+      id = await ApiService.creerReservation(reservation);
+    }catch(e){
+      if(!mounted)return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Envoi impossible : json-server est-il lance ?"),
+        backgroundColor: Theme.of(context).colorScheme.error) 
+      );
+      return;
+    }
+    if(!mounted) return;
     await showDialog<void>(
       context: context,
       builder : (context) => AlertDialog(
         icon : const Icon (Icons.check_circle , color: Colors.green , size : 48),
         title : const Text('Reservation confirmee'),
-        content : Text('Merci ${reservation.nom} pour votre reservation de ${_voyageurs} voyageur(s) pour ${reservation.destination.nom} et ${reservation.email} et ${reservation.formule}: Le total est de ${reservation.total} DT.'),
+        content : Text('Merci ${reservation.nom} avec le numero de reservation $id pour votre reservation de ${_voyageurs} voyageur(s) pour ${reservation.destination.nom} et ${reservation.email} et ${reservation.formule}: Le total est de ${reservation.total} DT.'),
         actions:[
           FilledButton(
             onPressed: () => Navigator.pop(context),

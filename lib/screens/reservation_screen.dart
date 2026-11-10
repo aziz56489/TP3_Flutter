@@ -85,6 +85,7 @@ class _ReservationScreenState extends State<ReservationScreen>{
       return;
     }
     final reservation = Reservation(
+      id: null,
       destination: widget.destination,
       nom: _nomCtrl.text.trim(),
       email: _emailCtrl.text.trim(),
