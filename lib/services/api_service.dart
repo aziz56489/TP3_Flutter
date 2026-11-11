@@ -16,6 +16,17 @@ class ApiService{
 
     return liste.map((json) => Destination.fromJson(json)).toList();
   }
+  static Future<List<Reservation>> getReservations() async{
+    final reponse = await http
+        .get(_url('/reservations?_embed=destination'))
+        .timeout(ApiConfig.timeout);
+    if(reponse.statusCode != 200){
+      throw Exception('Erreur lors de la récupération des reservations ${reponse.statusCode}');
+    }
+    final List<dynamic> liste = jsonDecode(utf8.decode(reponse.bodyBytes));
+
+    return liste.map((json) => Reservation.fromJson(json)).toList();
+  }
   static Future<String> creerReservation(Reservation reservation) async{
     final reponse = await http
             .post(

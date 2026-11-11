@@ -46,4 +46,16 @@ class Reservation {
   }
 
   int get total => prixParPersonne * voyageurs;
+  factory Reservation.fromJson(Map<String,dynamic> json){
+    return Reservation(
+      id: json['id'].toString(),
+      destination: Destination.fromJson(json['destination']), 
+      nom: json['nom'] as String, 
+      email: json['email'] as String, 
+      telephone: json['telephone'] as String,
+      dateDepart: DateTime.parse(json['dateDepart']), 
+      voyageurs: json['voyageurs'] as int,
+      formule: json['formule'] as String,
+    );
+  }
 }

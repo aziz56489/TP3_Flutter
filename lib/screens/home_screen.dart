@@ -8,12 +8,49 @@ import '../widgets/hero_banner.dart';
 import '../widgets/home_header.dart';
 import '../widgets/search_box.dart';
 import '../widgets/section_title.dart';
+import 'mes_reservations_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class ErreurReseau extends StatelessWidget {
+  const ErreurReseau({
+    super.key,
+    required this.message,
+    required this.onReessayer,
+  });
+
+  final String message;
+  final VoidCallback onReessayer;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.cloud_off, color: Theme.of(context).colorScheme.error, size: 60),
+            const SizedBox(height: 16),
+            Text(message, textAlign: TextAlign.center),
+            const SizedBox(height: 8),
+            const Text('Vérifiez que json-server est lancé', textAlign: TextAlign.center),
+            const SizedBox(height: 16),
+            FilledButton.tonalIcon(
+              onPressed: onReessayer,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Réessayer'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -148,8 +185,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _onglet == 0
-          ?  _construireExplorer()
-          :const Center(child: Text('Bientôt disponible')),
+          ? _construireExplorer()
+          : _onglet == 1
+              ? const Center(child: Text('Bientôt disponible'))
+              : const MesReservationsScreen(),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _onglet,
         onDestinationSelected: (index) {
@@ -167,46 +206,12 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Favoris',
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Profil',
+            icon: Icon(Icons.luggage_outlined),
+            selectedIcon: Icon(Icons.luggage),
+            label: 'Voyages',
           ),
         ],
       ),
     );
-  }
-}
-class ErreurReseau extends StatelessWidget{
-  final String message;
-  final VoidCallback onReessayer;
-  const ErreurReseau({super.key, required this.message, required this.onReessayer});
-  @override
-  Widget build(BuildContext context) {
-     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.cloud_off,
-          color: Theme.of(context).colorScheme.error,
-          size: 60,
-        ),
-        const SizedBox(height: 16),
-        Text(
-          message,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          "Verifier que json-server est lance",
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 16),
-        FilledButton.tonalIcon(
-          onPressed: onReessayer,
-          icon : Icon(Icons.refresh),
-          label: const Text("Reessayer")
-        ),
-      ],
-     ); 
   }
 }
