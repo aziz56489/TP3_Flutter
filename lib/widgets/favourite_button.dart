@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tp3/models/destination.dart';
+import 'package:tp3/providers/favoris_model.dart';
 
 class FavouriteButton extends StatelessWidget {
-  final bool isFavourite;
-  final VoidCallback onPressed;
-
-  const FavouriteButton({
-    super.key,
-    required this.isFavourite,
-    required this.onPressed,
-  });
+  final Destination destination;
+  const FavouriteButton({super.key, required this.destination});
 
   @override
   Widget build(BuildContext context) {
+    final estFavori = context.watch<FavorisModel>().estFavori(destination);
+
     return IconButton(
-      tooltip: isFavourite ? 'Retirer des favoris' : 'Ajouter aux favoris',
-      onPressed: onPressed,
-      visualDensity: VisualDensity.compact,
-      padding: EdgeInsets.zero,
-      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+      tooltip: estFavori ? 'Retirer des favoris' : 'Ajouter aux favoris',
+      onPressed: () => context.read<FavorisModel>().basculer(destination),
       icon: Icon(
-        isFavourite ? Icons.favorite : Icons.favorite_border,
-        color: isFavourite ? Colors.red : null,
+        estFavori ? Icons.favorite : Icons.favorite_border,
+        color: estFavori ? Theme.of(context).colorScheme.error : null,
       ),
     );
   }
