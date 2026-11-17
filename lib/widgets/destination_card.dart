@@ -6,15 +6,8 @@ import '../screens/detail_screen.dart';
 
 class DestinationCard extends StatelessWidget {
   final Destination destination;
-  final bool isFavourite;
-  final VoidCallback onFavouritePressed;
 
-  const DestinationCard({
-    super.key,
-    required this.destination,
-    required this.isFavourite,
-    required this.onFavouritePressed,
-  });
+  const DestinationCard({super.key, required this.destination});
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +24,7 @@ class DestinationCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DetailScreen(
-                destination: destination,
-                isFavourite: isFavourite,
-                onFavouritePressed: onFavouritePressed,
-              ),
+              builder: (context) => DetailScreen(destination: destination),
             ),
           );
         },
@@ -73,10 +62,7 @@ class DestinationCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        FavouriteButton(
-                          isFavourite: isFavourite,
-                          onPressed: onFavouritePressed,
-                        ),
+                        FavouriteButton(destination: destination),
                       ],
                     ),
                     const SizedBox(height: 8),

@@ -87,3 +87,7 @@ Une boîte de dialogue est aussi une route dans la pile de navigation. `Navigato
 ### Q1 . pour eviter la duplication des donnees et reduire la taille de la requete
 ### Q2 .le serveur risque de n est pas connaitre le format json du corps de la requete
 ### Q3. car pendant une operation asynchrone l utilisateur peut quitter la page 
+### Part 3: le changement principale est le sauvegarde des destinations favouris meme avec le refraichissement de la liste des cards et bien sur l affiche des destinations souhaitees dans l onglet des favouris 
+### Comment tester : simplement ajouter une destinations au favouris apres l execution d API (db.Json) avec la commande (npx json-server db.json) pour que les cards se charge 
+### Onglet favouris
+![Onglet Favouris](screenshots/sidibou.png)

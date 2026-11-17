@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 import 'package:tp3/data/destinations.dart';
+import 'package:tp3/providers/favoris_model.dart';
 import 'package:tp3/screens/detail_screen.dart';
 
 void main() {
-  testWidgets('detail favorite button toggles and notifies its owner', (
+  testWidgets('detail favorite button toggles shared favorite state', (
     tester,
   ) async {
-    var favoriteChanges = 0;
     await tester.pumpWidget(
-      MaterialApp(
-        home: DetailScreen(
-          destination: destinations.first,
-          isFavourite: false,
-          onFavouritePressed: () => favoriteChanges++,
+      ChangeNotifierProvider(
+        create: (_) => FavorisModel(),
+        child: MaterialApp(
+          home: DetailScreen(destination: destinations.first),
         ),
       ),
     );
@@ -26,6 +26,5 @@ void main() {
 
     expect(find.byIcon(Icons.favorite_border), findsNothing);
     expect(find.byIcon(Icons.favorite), findsOneWidget);
-    expect(favoriteChanges, 1);
   });
 }

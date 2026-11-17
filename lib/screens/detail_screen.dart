@@ -3,7 +3,6 @@ import 'package:tp3/models/reservation.dart';
 import 'package:tp3/services/api_service.dart';
 
 import '../models/destination.dart';
-import '../services/api_service.dart';
 import '../widgets/favourite_button.dart';
 import 'reservation_screen.dart';
 
@@ -11,23 +10,15 @@ import 'reservation_screen.dart';
 /// À relier aux cartes au palier 2 du TP4.
 class DetailScreen extends StatefulWidget {
   final Destination destination;
-  final bool isFavourite;
-  final VoidCallback onFavouritePressed;
 
-  const DetailScreen({
-    super.key,
-    required this.destination,
-    required this.isFavourite,
-    required this.onFavouritePressed,
-  });
+  const DetailScreen({super.key, required this.destination});
   @override
   State<DetailScreen> createState() => _DetailScreenState();
 }
 
 class _DetailScreenState extends State<DetailScreen> {
   int _voyageurs = 1;
-  late bool _isFavourite;
-  Future<void> _reserver() async{
+  Future<void> _reserver() async {
     final Reservation? reservation = await Navigator.push<Reservation>(
       context,
       MaterialPageRoute(
@@ -37,39 +28,38 @@ class _DetailScreenState extends State<DetailScreen> {
         ),
       ),
     );
-    if(reservation == null) return;
-    if(!mounted) return;
+    if (reservation == null) return;
+    if (!mounted) return;
     final String id;
-    try{
+    try {
       id = await ApiService.creerReservation(reservation);
-    }catch(e){
-      if(!mounted)return;
+    } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Envoi impossible : json-server est-il lance ?"),
-        backgroundColor: Theme.of(context).colorScheme.error) 
+        SnackBar(
+          content: Text("Envoi impossible : json-server est-il lance ?"),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
       );
       return;
     }
-    if(!mounted) return;
+    if (!mounted) return;
     await showDialog<void>(
       context: context,
-      builder : (context) => AlertDialog(
-        icon : const Icon (Icons.check_circle , color: Colors.green , size : 48),
-        title : const Text('Reservation confirmee'),
-        content : Text('Merci ${reservation.nom} avec le numero de reservation $id pour votre reservation de ${_voyageurs} voyageur(s) pour ${reservation.destination.nom} et ${reservation.email} et ${reservation.formule}: Le total est de ${reservation.total} DT.'),
-        actions:[
+      builder: (context) => AlertDialog(
+        icon: const Icon(Icons.check_circle, color: Colors.green, size: 48),
+        title: const Text('Reservation confirmee'),
+        content: Text(
+          'Merci ${reservation.nom} avec le numero de reservation $id pour votre reservation de ${_voyageurs} voyageur(s) pour ${reservation.destination.nom} et ${reservation.email} et ${reservation.formule}: Le total est de ${reservation.total} DT.',
+        ),
+        actions: [
           FilledButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Parfait'),
           ),
         ],
-    )
+      ),
     );
-  }
-  @override
-  void initState() {
-    super.initState();
-    _isFavourite = widget.isFavourite;
   }
 
   @override
@@ -97,7 +87,9 @@ class _DetailScreenState extends State<DetailScreen> {
                   child: _BoutonRond(
                     child: IconButton(
                       tooltip: 'Retour',
-                      onPressed: () {Navigator.pop(context);}, // TP4 palier 2
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }, // TP4 palier 2
                       icon: const Icon(Icons.arrow_back),
                     ),
                   ),
@@ -105,15 +97,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 Positioned(
                   top: 48,
                   right: 16,
-                  child: _BoutonRond(
-                    child: FavouriteButton(
-                      isFavourite: _isFavourite,
-                      onPressed: () {
-                        setState(() => _isFavourite = !_isFavourite);
-                        widget.onFavouritePressed();
-                      },
-                    ),
-                  ),
+                  child: _BoutonRond(child: FavouriteButton(destination: d)),
                 ),
               ],
             ),
