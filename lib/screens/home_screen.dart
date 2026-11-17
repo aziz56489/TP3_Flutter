@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tp3/models/destination.dart';
 
-import '../data/destinations.dart';
+import '../providers/favoris_model.dart';
 import '../services/api_service.dart';
 import '../widgets/destination_card.dart';
 import '../widgets/hero_banner.dart';
 import '../widgets/home_header.dart';
 import '../widgets/search_box.dart';
 import '../widgets/section_title.dart';
+import 'favoris_screen.dart';
 import 'mes_reservations_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -35,11 +37,18 @@ class ErreurReseau extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.cloud_off, color: Theme.of(context).colorScheme.error, size: 60),
+            Icon(
+              Icons.cloud_off,
+              color: Theme.of(context).colorScheme.error,
+              size: 60,
+            ),
             const SizedBox(height: 16),
             Text(message, textAlign: TextAlign.center),
             const SizedBox(height: 8),
-            const Text('Vérifiez que json-server est lancé', textAlign: TextAlign.center),
+            const Text(
+              'Vérifiez que json-server est lancé',
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 16),
             FilledButton.tonalIcon(
               onPressed: onReessayer,
@@ -55,64 +64,43 @@ class ErreurReseau extends StatelessWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String _categorie = 'Tout';
-  String _recherche = '';
   int _onglet = 0;
-  final Set<String> _favoris = <String>{};
   late Future<List<Destination>> _futurDestinations;
   @override
   void initState() {
     super.initState();
     _futurDestinations = ApiService.getDestinations();
   }
-  List<Destination> _filtrer(List<Destination> toutes) => _categorie =='Tout'
-    ? toutes
-    : toutes.where((d) => d.categorie == _categorie).toList();
-  List<Destination> get _filtrees {
-    final source = _onglet == 1
-        ? destinations.where(
-            (destination) => _favoris.contains(destination.nom),
-          )
-        : destinations;
-    final query = _recherche.trim().toLowerCase();
 
-    return source
-        .where(
-          (destination) =>
-              _categorie == 'Tout' || destination.categorie == _categorie,
-        )
-        .where(
-          (destination) =>
-              query.isEmpty ||
-              destination.nom.toLowerCase().contains(query) ||
-              destination.region.toLowerCase().contains(query) ||
-              destination.categorie.toLowerCase().contains(query),
-        )
-        .toList();
-  }
-  Future<void> _recharger() async{
+  List<Destination> _filtrer(List<Destination> toutes) => _categorie == 'Tout'
+      ? toutes
+      : toutes.where((d) => d.categorie == _categorie).toList();
+  Future<void> _recharger() async {
     final futur = ApiService.getDestinations();
     setState(() {
-      _futurDestinations = futur; 
+      _futurDestinations = futur;
     });
     try {
       await futur;
-    }catch(_){}
+    } catch (_) {}
   }
-  Widget _construireExplorer(){
+
+  Widget _construireExplorer() {
     return FutureBuilder<List<Destination>>(
       future: _futurDestinations,
-      builder: (context, snapshot){
-        if(snapshot.connectionState == ConnectionState.waiting){
-          return const Center(child:CircularProgressIndicator());
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
         }
-        if(snapshot.hasError){
+        if (snapshot.hasError) {
           return ErreurReseau(message: "", onReessayer: _recharger);
         }
         final destinations = snapshot.data!;
         return RefreshIndicator(
           onRefresh: _recharger,
-          child: _construireAccueil(destinations));
-      }
+          child: _construireAccueil(destinations),
+        );
+      },
     );
   }
 
@@ -124,19 +112,9 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           const HomeHeader(prenom: 'Aziz'),
           const SizedBox(height: 20),
-          SearchBox(onChanged: (value) => setState(() => _recherche = value)),
+          const SearchBox(),
           const SizedBox(height: 24),
-          HeroBanner(
-            destination: destinations.first,
-            isFavourite: _favoris.contains(destinations.first.nom),
-            onFavouritePressed: () {
-              setState(() {
-                if (!_favoris.add(destinations.first.nom)) {
-                  _favoris.remove(destinations.first.nom);
-                }
-              });
-            },
-          ),
+          HeroBanner(destination: destinations.first),
           const SizedBox(height: 24),
           const SectionTitle(title: 'Catégories'),
           const SizedBox(height: 12),
@@ -144,7 +122,10 @@ class _HomeScreenState extends State<HomeScreen> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                for (final c in <String> {'Tout' , ...destinations.map((d)=>d.categorie)})
+                for (final c in <String>{
+                  'Tout',
+                  ...destinations.map((d) => d.categorie),
+                })
                   Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: ChoiceChip(
@@ -163,49 +144,46 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 12),
           // Une clé stable garde l'état visuel associé à la bonne destination lors du filtrage.
           for (final d in filtrees)
-            DestinationCard(
-              key: ValueKey(d.id),
-              destination: d,
-              isFavourite: _favoris.contains(d.nom),
-              onFavouritePressed: () {
-                setState(() {
-                  if (!_favoris.add(d.nom)) _favoris.remove(d.nom);
-                });
-              },
-              
-            ),
+            DestinationCard(key: ValueKey(d.id), destination: d),
         ],
       ),
-      
     );
   }
-  
 
   @override
   Widget build(BuildContext context) {
+    final nbFavoris = context.watch<FavorisModel>().nombre;
     return Scaffold(
-      body: _onglet == 0
-          ? _construireExplorer()
-          : _onglet == 1
-              ? const Center(child: Text('Bientôt disponible'))
-              : const MesReservationsScreen(),
+      body: switch (_onglet) {
+        0 => _construireExplorer(),
+        1 => const FavorisScreen(),
+        _ => const MesReservationsScreen(),
+      },
       bottomNavigationBar: NavigationBar(
         selectedIndex: _onglet,
         onDestinationSelected: (index) {
           setState(() => _onglet = index);
         },
-        destinations: const [
-          NavigationDestination(
+        destinations: [
+          const NavigationDestination(
             icon: Icon(Icons.explore_outlined),
             selectedIcon: Icon(Icons.explore),
             label: 'Explorer',
           ),
           NavigationDestination(
-            icon: Icon(Icons.favorite_border),
-            selectedIcon: Icon(Icons.favorite),
+            icon: Badge(
+              isLabelVisible: nbFavoris > 0,
+              label: Text('$nbFavoris'),
+              child: const Icon(Icons.favorite_border),
+            ),
+            selectedIcon: Badge(
+              isLabelVisible: nbFavoris > 0,
+              label: Text('$nbFavoris'),
+              child: const Icon(Icons.favorite),
+            ),
             label: 'Favoris',
           ),
-          NavigationDestination(
+          const NavigationDestination(
             icon: Icon(Icons.luggage_outlined),
             selectedIcon: Icon(Icons.luggage),
             label: 'Voyages',
