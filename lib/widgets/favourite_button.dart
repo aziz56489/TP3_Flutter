@@ -9,6 +9,7 @@ class FavouriteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //ligne generee par Copilot
     final estFavori = context.watch<FavorisModel>().estFavori(destination);
 
     return IconButton(
