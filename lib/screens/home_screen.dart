@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tp3/models/destination.dart';
+import 'package:tp3/providers/reglages_model.dart';
 
 import '../providers/favoris_model.dart';
 import '../services/api_service.dart';
@@ -153,12 +154,22 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final nbFavoris = context.watch<FavorisModel>().nombre;
+    final sombre = context.watch<ReglagesModel>().sombre;
     return Scaffold(
       body: switch (_onglet) {
         0 => _construireExplorer(),
         1 => const FavorisScreen(),
         _ => const MesReservationsScreen(),
       },
+      appBar: AppBar(
+        title: const Text('Rihla'),
+        actions:[
+          IconButton(
+            tooltip: sombre ? 'Passer au theme claire' : 'Passer au theme sombre',
+            onPressed: ()=> context.read<ReglagesModel>().basculerTheme(),
+            icon: Icon(sombre ? Icons.light_mode : Icons.dark_mode))
+        ]
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _onglet,
         onDestinationSelected: (index) {

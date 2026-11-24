@@ -35,4 +35,6 @@ Réponse : `main` reste inchangée tant que la branche `feature/favoris` n’est
 2. Que se passe-t-il si j'oublie de supprimer un marqueur `=======` ?
    Réponse : Le marqueur reste dans le code et signale un conflit non résolu. Il provoque une erreur de syntaxe ou d’analyse ; il faut supprimer tous les marqueurs (`<<<<<<<`, `=======`, `>>>>>>>`) et ne garder que le contenu voulu.
 **TP7 Palier1**
-1.
+1. parce que shared preferences peut enregistrer des types simples comme des chaines de caracteres mais pas des objets alors on transforme chaque destination en json pour la sauvegarde et apres on le reconstruiit a l aide de jsonDecode
+2. FavorisModel() nous permet de creer une instance et loperateur .. sert a appeler la methode charger() sur cette instance et enfin la methode charger() nous permet de recuperer tous les destinations enregistres mais FavorisModel().charger() permet de retourner son Future<void> pas le modele
+3. Le probleme concerne l actualisation de l interface pas la sauvegarde car les favoris seraient charger dans _favoris mais les widgets abonnes ne seraient pas avertis ce qui fait l ecran peut afficher une liste obsolete
