@@ -34,3 +34,6 @@ Réponse : `main` reste inchangée tant que la branche `feature/favoris` n’est
    Réponse : Les branches ne modifiaient pas les mêmes lignes simultanément. Git a donc pu combiner leurs changements automatiquement.
 2. Que se passe-t-il si j'oublie de supprimer un marqueur `=======` ?
    Réponse : Le marqueur reste dans le code et signale un conflit non résolu. Il provoque une erreur de syntaxe ou d’analyse ; il faut supprimer tous les marqueurs (`<<<<<<<`, `=======`, `>>>>>>>`) et ne garder que le contenu voulu.
+**Finition du Journal**
+charger() récupère les préférences enregistrées, lit la liste de chaînes JSON (ou utilise une liste vide si aucune n’existe), puis parcourt chaque chaîne. Il décode le JSON en map, crée une Destination avec Destination.fromJson, et la range dans _favoris sous son identifiant. Enfin, notifyListeners() avertit les widgets que le modèle a changé.
+Le catch de getDestinations() s’exécute si la requête échoue ou si une erreur est lancée dans le try. Il cherche alors les données en cache. S’il n’y en a pas, rethrow relance l’erreur d’origine; sinon, le cache est décodé et renvoyé.
