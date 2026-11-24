@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tp3/models/destination.dart';
+import 'package:tp3/providers/reglages_model.dart';
 
 import '../providers/favoris_model.dart';
 import '../services/api_service.dart';
@@ -96,9 +97,44 @@ class _HomeScreenState extends State<HomeScreen> {
           return ErreurReseau(message: "", onReessayer: _recharger);
         }
         final destinations = snapshot.data!;
-        return RefreshIndicator(
-          onRefresh: _recharger,
-          child: _construireAccueil(destinations),
+        return Column(
+          children: [
+            if (ApiService.depuisCache)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                color: Theme.of(context).colorScheme.secondaryContainer,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.wifi_off,
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'Hors connexion : données enregistrées',
+                        style: TextStyle(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: _recharger,
+                child: _construireAccueil(destinations),
+              ),
+            ),
+          ],
         );
       },
     );
@@ -153,12 +189,22 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final nbFavoris = context.watch<FavorisModel>().nombre;
+    final sombre = context.watch<ReglagesModel>().sombre;
     return Scaffold(
       body: switch (_onglet) {
         0 => _construireExplorer(),
         1 => const FavorisScreen(),
         _ => const MesReservationsScreen(),
       },
+      appBar: AppBar(
+        title: const Text('Rihla'),
+        actions:[
+          IconButton(
+            tooltip: sombre ? 'Passer au theme claire' : 'Passer au theme sombre',
+            onPressed: ()=> context.read<ReglagesModel>().basculerTheme(),
+            icon: Icon(sombre ? Icons.light_mode : Icons.dark_mode))
+        ]
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _onglet,
         onDestinationSelected: (index) {
