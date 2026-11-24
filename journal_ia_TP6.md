@@ -34,6 +34,17 @@ Réponse : `main` reste inchangée tant que la branche `feature/favoris` n’est
    Réponse : Les branches ne modifiaient pas les mêmes lignes simultanément. Git a donc pu combiner leurs changements automatiquement.
 2. Que se passe-t-il si j'oublie de supprimer un marqueur `=======` ?
    Réponse : Le marqueur reste dans le code et signale un conflit non résolu. Il provoque une erreur de syntaxe ou d’analyse ; il faut supprimer tous les marqueurs (`<<<<<<<`, `=======`, `>>>>>>>`) et ne garder que le contenu voulu.
+<<<<<<< HEAD
 **Finition du Journal**
 charger() récupère les préférences enregistrées, lit la liste de chaînes JSON (ou utilise une liste vide si aucune n’existe), puis parcourt chaque chaîne. Il décode le JSON en map, crée une Destination avec Destination.fromJson, et la range dans _favoris sous son identifiant. Enfin, notifyListeners() avertit les widgets que le modèle a changé.
 Le catch de getDestinations() s’exécute si la requête échoue ou si une erreur est lancée dans le try. Il cherche alors les données en cache. S’il n’y en a pas, rethrow relance l’erreur d’origine; sinon, le cache est décodé et renvoyé.
+=======
+**TP7 Palier1**
+1. parce que shared preferences peut enregistrer des types simples comme des chaines de caracteres mais pas des objets alors on transforme chaque destination en json pour la sauvegarde et apres on le reconstruiit a l aide de jsonDecode
+2. FavorisModel() nous permet de creer une instance et loperateur .. sert a appeler la methode charger() sur cette instance et enfin la methode charger() nous permet de recuperer tous les destinations enregistres mais FavorisModel().charger() permet de retourner son Future<void> pas le modele
+3. Le probleme concerne l actualisation de l interface pas la sauvegarde car les favoris seraient charger dans _favoris mais les widgets abonnes ne seraient pas avertis ce qui fait l ecran peut afficher une liste obsolete
+**TP7 Partie3**
+1. le code enregistre le corps avant de le décoder. Une réponse 200 contenant du JSON invalide pourrait donc aussi être mise en cache.
+2. il va recevoir une erreur de chargement car il n y a pas de cache 
+3. rethrow permet de generer une erreur et elle remonte au FutureBuilder
+>>>>>>> a814ad7efcc571eb746340a3e0208fb24786b6fa
