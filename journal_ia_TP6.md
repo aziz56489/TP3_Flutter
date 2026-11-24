@@ -34,3 +34,5 @@ Réponse : `main` reste inchangée tant que la branche `feature/favoris` n’est
    Réponse : Les branches ne modifiaient pas les mêmes lignes simultanément. Git a donc pu combiner leurs changements automatiquement.
 2. Que se passe-t-il si j'oublie de supprimer un marqueur `=======` ?
    Réponse : Le marqueur reste dans le code et signale un conflit non résolu. Il provoque une erreur de syntaxe ou d’analyse ; il faut supprimer tous les marqueurs (`<<<<<<<`, `=======`, `>>>>>>>`) et ne garder que le contenu voulu.
+**TP7 Palier1**
+1.
